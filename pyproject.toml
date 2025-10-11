@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "fastapi-poetry-docker-starter"
+version = "0.1.0"
+description = "FastAPI starter running in Docker with Poetry and VSCode Dev Containers"
+authors = ["you <you@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115"
+uvicorn = {version = "^0.30", extras = ["standard"]}
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3"
+ruff = "^0.6.9"
+black = "^24.8"
+mypy = "^1.13"
+httpx = "^0.27"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+strict_optional = true

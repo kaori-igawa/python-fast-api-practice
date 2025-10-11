@@ -1,16 +1,21 @@
 # syntax=docker/dockerfile:1
 FROM python:3.12-slim AS builder
 ENV PIP_DISABLE_PIP_VERSION_CHECK=1 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 \
-    PATH="/root/.local/bin:${PATH}"
+    PATH="/root/.local/bin:${PATH}" POETRY_NO_INTERACTION=1 POETRY_VIRTUALENVS_CREATE=false
 RUN apt-get update && apt-get install -y --no-install-recommends curl && rm -rf /var/lib/apt/lists/*
-# 旧インストールのpoetryがあると邪魔なので掃除（あっても無視）
-RUN rm -f /usr/local/bin/poetry || true
-# ビルド用にだけ Poetry を入れる
+
+# Poetry 本体
 RUN python -m pip install --no-cache-dir pipx && pipx install poetry
+# ★ ここを追加：export コマンドのプラグイン
+RUN poetry self add poetry-plugin-export
+
 WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
-RUN poetry --version
-# ロックから requirements.txt を生成
+
+# lock 生成（--no-update は 2.x では不要）
+RUN poetry --version && poetry lock
+
+# requirements.txt を生成（export はプラグイン提供）
 RUN poetry export -f requirements.txt -o /tmp/requirements.txt --without-hashes
 
 FROM python:3.12-slim AS runtime

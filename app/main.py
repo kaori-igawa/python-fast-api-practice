@@ -1,9 +1,6 @@
 from fastapi import FastAPI
-import requests
+from app.api.router import api_router
 
 app = FastAPI()
-
-@app.get("/ping")
-def ping():
-    r = requests.get("https://httpbin.org/get", timeout=5)
-    return {"ok": r.ok, "ua": r.json()["headers"].get("User-Agent")}
+app.include_router(api_router, prefix="/api/v1")
+# /api/v1/users, /api/v1/hello が有効になる

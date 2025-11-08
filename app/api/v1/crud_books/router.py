@@ -22,3 +22,13 @@ def create_book(book: BookSchema):
   books.append(new_book)
   # 登録書籍データを返す
   return new_book
+
+# ----------------------------------------------------
+# 書籍情報を全件取得するエンドポイント
+# 引数：なし
+# 戻り値：BookResponseSchemaのリスト
+# ----------------------------------------------------
+@router.get("/", response_model=list[BookResponseSchema])
+def read_books():
+  # すべての書籍を取得
+  return books

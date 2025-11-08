@@ -44,3 +44,22 @@ def read_book(book_id: int):
     if book.id == book_id:
       return book
   raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+
+# ----------------------------------------------------
+# idに対応する書籍情報を更新するエンドポイント
+# 引数：
+# 書籍ID
+# BookSchema
+# 戻り値：BookResponseSchema
+# ----------------------------------------------------
+@router.put("/{book_id}", response_model=BookResponseSchema)
+def update_book(book_id: int, book: BookSchema):
+  # 特定のIDの書籍を更新
+  # enumerateはインデックスと要素の両方を取得することができる
+  for index, existing_book in enumerate(books):
+    if existing_book.id == book_id:
+      updated_book = BookResponseSchema(id=book_id, **book.model_dump())
+      books[index] = updated_book
+      return updated_book
+  # 無ければ例外を投げる
+  raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")

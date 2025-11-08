@@ -63,3 +63,18 @@ def update_book(book_id: int, book: BookSchema):
       return updated_book
   # 無ければ例外を投げる
   raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")
+
+# ----------------------------------------------------
+# idに対応する書籍情報を削除するエンドポイント
+# 引数：書籍ID
+# 戻り値：BookResponseSchema
+# ----------------------------------------------------
+@router.delete("/{book_id}", response_model=BookResponseSchema)
+def delete_book(book_id: int):
+  # 特定のIDの書籍を削除
+  for index, book in enumerate(books):
+    if book.id == book_id:
+      books.pop(index)
+      return book
+  # 無ければ例外を投げる
+  raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")

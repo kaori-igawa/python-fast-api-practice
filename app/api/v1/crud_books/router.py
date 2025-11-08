@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from .schemas import BookSchema, BookResponseSchema
 from .service import books
 
@@ -32,3 +32,15 @@ def create_book(book: BookSchema):
 def read_books():
   # すべての書籍を取得
   return books
+
+# ----------------------------------------------------
+# 書籍情報をidによって1件取得するエンドポイント
+# 引数：書籍ID
+# 戻り値：BookResponseSchema
+# ----------------------------------------------------
+@router.get("/{book_id}", response_model=BookResponseSchema)
+def read_book(book_id: int):
+  for book in books:
+    if book.id == book_id:
+      return book
+  raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Book not found")

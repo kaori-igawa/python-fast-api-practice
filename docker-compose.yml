@@ -9,5 +9,7 @@ services:
       - .env
     volumes:
       - ./app:/app/app:rw,delegated
+      # ★ 追加：SQLiteファイルを保存するディレクトリ
+      - ./db:/data
     # If you strictly need amd64 on Apple Silicon, you can uncomment:
     # platform: "linux/amd64"

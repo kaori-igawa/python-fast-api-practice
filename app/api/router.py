@@ -7,6 +7,7 @@ from .v1.crud_books import router as crud_books
 from .v1.pydantic_field import router as pydantic_field
 from .v1.fastapi_async import router as fastapi_async
 from .v1.fastapi_router_refactoring import router  as fastapi_router_refactoring
+from .v1.fastapi_di import router  as fastapi_di
 
 api_router = APIRouter()
 api_router.include_router(hello.router)
@@ -17,3 +18,4 @@ api_router.include_router(crud_books.router)
 api_router.include_router(pydantic_field.router)
 api_router.include_router(fastapi_async.router)
 api_router.include_router(fastapi_router_refactoring.api_router)
+api_router.include_router(fastapi_di.router)

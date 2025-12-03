@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from schemas.memo import InsertAndUpdateMemoSchema, MemoSchema, ResponseSchema
-import cruds.memo as memo_crud
-import db
+from ..schemas.memo import InsertAndUpdateMemoSchema, MemoSchema, ResponseSchema
+from ..cruds import memo as memo_crud
+from .. import db
 
 # ルーターを作成し、タグとURLパスのプレフィックスを設定
 router = APIRouter(prefix="/memos", tags=["Memos"])
@@ -43,7 +43,7 @@ async def get_memo_detail(memo_id: int,
 # 特定のメモを更新するエンドポイント
 @router.put("/{memo_id}", response_model=ResponseSchema)
 async def modify_memo(memo_id: int, memo: InsertAndUpdateMemoSchema, 
-                      db: AsyncSession = Depends(db.get_session)):
+                      db: AsyncSession = Depends(db.get_dbsession)):
   # 指定されたIDのメモを新しいデータで更新
   updated_memo = await memo_crud.update_memo(db, memo_id, memo)
   if not updated_memo:

@@ -1,5 +1,5 @@
 // グローバルスコープでFastAPIのURLを定義
-const apiUrl = 'http://localhost:8000/api/v1/fastapi_memoapp/memos';
+const apiUrl = 'http://localhost:8000/api/v1/fastapi_memoapp/memos/';
 
 // 編集中のメモIDを保持する変数
 let editingMemoId = null;

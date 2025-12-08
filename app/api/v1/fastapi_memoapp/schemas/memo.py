@@ -1,8 +1,14 @@
 from pydantic import BaseModel, Field
+from datetime import datetime
 
 # ==================================================
 # スキーマ定義
 # ==================================================
+class MemoStatusSchema(BaseModel):
+  priority: str = Field(..., description="優先度", example="高")
+  due_date: datetime | None = Field(None, description="メモの期限日、設定されていない場合はNone", example="2023-10-01T00:00:00")
+  is_completed: bool = Field(False, description="メモが完了したかどうかを示すフラグ", example=False)
+
 # 登録・更新で使用するスキーマ
 class InsertAndUpdateMemoSchema(BaseModel):
   # メモのタイトル。このフィールドは必須です。
@@ -13,6 +19,7 @@ class InsertAndUpdateMemoSchema(BaseModel):
   description: str = Field(default="",
                            description="メモの内容についての追加情報。任意で記入できます。",
                            example="会議で話すトピック；プロジェクトの進捗状況")
+  status: MemoStatusSchema = Field(..., description="メモの状態を表す情報")
   
 # メモ情報を表すスキーマ
 class MemoSchema(InsertAndUpdateMemoSchema):

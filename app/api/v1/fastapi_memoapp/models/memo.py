@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from ..db import Base
 from datetime import datetime
 
@@ -19,3 +19,9 @@ class Memo(Base):
   create_at = Column(DateTime, default=datetime.now())
   # 更新日時
   updated_at = Column(DateTime)
+  # 優先度
+  priority = Column(String(10), nullable=False)
+  # 期限日
+  due_date = Column(DateTime, nullable=True)
+  # 完了フラグ
+  is_completed = Column(Boolean, default=False)

@@ -1,10 +1,20 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 from app.api.router import api_router
+from app.api.v1.fastapi_memoapp import db as memo_db
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+  # メモアプリ用のテーブルが存在しない場合に作成する
+  await memo_db.init_models()
+  yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 # CORS設定
 app.add_middleware(

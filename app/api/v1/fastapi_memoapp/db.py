@@ -40,3 +40,16 @@ async_session = sessionmaker(
 async def get_dbsession():
   async with async_session() as session:
     yield session
+
+
+async def init_models() -> None:
+  """
+  アプリ起動時に必要なテーブルを作成する。
+  モデルの読み込みによるmetadata登録を確実にしてからcreate_allを実行する。
+  """
+  # モデルをインポートしてmetadataにテーブル情報を読み込ませる
+  from .models import memo  # noqa: F401
+
+  async with engine.begin() as conn:
+    # create_allは既存テーブルはそのまま、無ければ作るため、起動時に毎回呼んでも安全という設計です。
+    await conn.run_sync(Base.metadata.create_all)

@@ -24,7 +24,14 @@ async def insert_memo(
   print("=== 新規登録：開始 ===")
   # model_dumpはオブジェクトの属性を辞書形式に変換する
   # **は辞書の展開
-  new_memo = memo_model.Memo(**memo_data.model_dump())
+  new_memo = memo_model.Memo(
+    title=memo_data.title,
+    description=memo_data.description,
+    # メモのステータス情報を取得 (status 経由でアクセス)
+    priority=memo_data.status.priority,
+    due_date=memo_data.status.due_date,
+    is_completed=memo_data.status.is_completed
+  )
   db_session.add(new_memo)
   await db_session.commit()
   await db_session.refresh(new_memo)
@@ -88,6 +95,10 @@ async def update_memo(
     memo.title = target_data.title
     memo.description = target_data.description
     memo.updated_at = datetime.now()
+    # メモのステータス情報を更新 (status 経由でアクセス)
+    memo.priority = target_data.status.priority
+    memo.due_date = target_data.status.due_date
+    memo.is_completed = target_data.status.is_completed
     await db_session.commit()
     await db_session.refresh(memo)
     print(">>> データ更新完了")

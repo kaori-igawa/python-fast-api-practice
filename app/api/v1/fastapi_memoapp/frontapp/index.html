@@ -25,6 +25,24 @@
                 <label for="description">詳細</label>
                 <textarea id="description" placeholder="詳細を入力"></textarea>
             </div>
+            <!-- ▽▽▽ 追加 ▽▽▽ -->
+            <div>
+                <label for="priority">優先度</label>
+                <select id="priority">
+                    <option value="低">低</option>
+                    <option value="中">中</option>
+                    <option value="高">高</option>
+                </select>
+            </div>
+            <div>
+                <label for="due_date">期限日</label>
+                <input type="date" id="due_date">
+            </div>
+            <div>
+                <label for="is_completed">完了</label>
+                <input type="checkbox" id="is_completed">
+            </div>
+            <!-- △△△ 追加 △△△ -->
             <div class="button-container">
                 <!-- メモ新規登録ボタン -->
                 <button type="submit">新規登録</button>
@@ -41,7 +59,12 @@
             <tr>
                 <th>タイトル</th>
                 <th>詳細</th>
+                <!-- ▽▽▽ 追加 ▽▽▽ -->
+                <th>優先度</th>
+                <th>期限日</th>
+                <th>完了</th>
                 <th>操作</th>
+                <!-- △△△ 追加 △△△ -->
             </tr>
         </thead>
         <tbody>

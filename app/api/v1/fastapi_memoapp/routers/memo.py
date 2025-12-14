@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from ..schemas.memo import InsertAndUpdateMemoSchema, MemoSchema, ResponseSchema
+from ..schemas.memo import InsertAndUpdateMemoSchema, MemoSchema, ResponseSchema, MemoStatusSchema
 from ..cruds import memo as memo_crud
 from .. import db
 
@@ -27,7 +27,24 @@ async def create_memo(memo: InsertAndUpdateMemoSchema,
 async def get_memos_list(db: AsyncSession = Depends(db.get_dbsession)):
   # 全てのメモをデータベースから取得
   memos = await memo_crud.get_memos(db)
-  return memos
+  # SQLAlchemyのメモオブジェクトをPydanticモデルに変換
+  memos_pydantic = []
+  for memo in memos:
+    # MemoStatusSchema を作成
+    status = MemoStatusSchema(
+      priority=memo.priority,
+      due_date=memo.due_date,
+      is_completed=memo.is_completed
+    )
+    # MemoSchema を作成
+    memo_pydantic = MemoSchema(
+      memo_id=memo.memo_id,
+      title=memo.title,
+      description=memo.description,
+      status=status
+    )
+    memos_pydantic.append(memo_pydantic)
+  return memos_pydantic
 
 # 特定のメモ情報取得のエンドポイント
 @router.get("/{memo_id}", response_model=MemoSchema)
@@ -38,7 +55,20 @@ async def get_memo_detail(memo_id: int,
   if not memo:
     # メモが見つからない場合、HTTP 404エラーを返す
     raise HTTPException(status_code=404, detail="メモが見つかりません")
-  return memo
+  # MemoStatusSchema を作成
+  status = MemoStatusSchema(
+    priority=memo.priority,
+    due_date=memo.due_date,
+    is_completed=memo.is_completed
+  )
+  # MemoSchema を作成
+  memo_pydantic = MemoSchema(
+    memo_id=memo.memo_id,
+    title=memo.title,
+    description=memo.description,
+    status=status
+  )
+  return memo_pydantic
 
 # 特定のメモを更新するエンドポイント
 @router.put("/{memo_id}", response_model=ResponseSchema)
